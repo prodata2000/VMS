@@ -2,6 +2,7 @@
 
 ## 📌 Overview
 This project is a simple **Visitor Management System** built using Flask and SQLite. It allows visitors to sign in and administrators to manage visitor logs.
+This was designed to be run in a closed network for simplicity. We did not want anything outside our network control and did not want paper. 
 
 ## 🚀 Features
 - Visitor sign-in form with name, email, phone, company, and reason for visit.
