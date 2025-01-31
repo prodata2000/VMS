@@ -1,13 +1,14 @@
 # Visitor Management System
 
 ## 📌 Overview
-This is a simple **Visitor Management System** built using Flask and SQLite, allowing visitors to sign in and administrators to manage visitor logs.
+This project is a simple **Visitor Management System** built using Flask and SQLite. It allows visitors to sign in and administrators to manage visitor logs.
 
 ## 🚀 Features
-- Visitor sign-in with name, email, phone, company, and reason for visit.
-- Admin dashboard to view and export visitor logs.
-- Secure authentication for admin access.
-- Data stored in SQLite.
+- Visitor sign-in form with name, email, phone, company, and reason for visit.
+- Admin dashboard for managing and exporting visitor logs.
+- CSV export functionality for visitor data.
+- Session-based admin authentication.
+- Simple SQLite database for data storage.
 - Dockerized deployment with Nginx as a reverse proxy.
 
 ## 🛠️ Installation
@@ -18,28 +19,36 @@ This is a simple **Visitor Management System** built using Flask and SQLite, all
 ### Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/visitor-management-system.git
-   cd visitor-management-system
+   git clone https://github.com/prodata2000/VMS.git
+   cd VMS
    ```
-2. Create a `.env` file:
-   ```bash
-   FLASK_SECRET_KEY=your_secure_key
-   ADMIN_USERNAME=your_admin
-   ADMIN_PASSWORD=your_secure_password
-   ```
-3. Build and run with Docker:
+2. Build and run with Docker:
    ```bash
    docker-compose up --build -d
    ```
-4. Access the app:
+3. Access the app:
    - **Visitor Sign-in:** `http://localhost`
    - **Admin Login:** `http://localhost/admin`
 
-## 🔐 Security Best Practices
-- **Use environment variables** instead of hardcoded secrets.
-- **Enable HTTPS** with a valid SSL certificate in production.
-- **Restrict database access** and use parameterized queries.
-- **Improve session security** using Flask-Session.
+## 📂 Project Structure
+```
+VMS/
+│── app.py                 # Main Flask application
+│── requirements.txt       # Python dependencies
+│── Dockerfile             # Docker configuration
+│── docker-compose.yml     # Docker Compose setup
+│── nginx.conf             # Nginx reverse proxy configuration
+│── templates/             # HTML templates
+│   │── form.html          # Visitor sign-in form
+│   │── thank_you.html     # Thank-you page
+│   │── admin_login.html   # Admin login page
+│   │── admin_dashboard.html # Admin dashboard
+```
+
+## 🔐 Security Considerations
+- Hardcoded admin credentials exist in `app.py`. Change them before deploying.
+- SQLite is used for simplicity but lacks robust security features.
+- HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
 
 ## 🤝 Contributing
 1. Fork the repository.
@@ -53,4 +62,3 @@ This project is licensed under the MIT License.
 ---
 ### 📩 Need Help?
 For issues and feature requests, open a GitHub issue or contact the maintainer.
-
