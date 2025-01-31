@@ -2,7 +2,6 @@
 
 ## 📌 Overview
 This project is a simple **Visitor Management System** built using Flask and SQLite. It allows visitors to sign in and administrators to manage visitor logs.
-This was designed to be run in a closed network for simplicity. We did not want anything outside our network control and did not want paper. 
 
 ## 🚀 Features
 - Visitor sign-in form with name, email, phone, company, and reason for visit.
@@ -47,6 +46,42 @@ VMS/
 ```
 
 ## 🔐 Security Considerations
+
+## 🌐 Enabling HTTPS with a Self-Signed Certificate
+If you want to use HTTPS with Nginx in a local environment, you can generate a self-signed SSL certificate:
+
+1. **Generate the SSL certificate and key:**
+   ```bash
+   mkdir -p nginx/certs
+   openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/certs/selfsigned.key -out nginx/certs/selfsigned.crt
+   ```
+   Follow the prompts and enter appropriate values.
+
+2. **Modify `nginx.conf` to use SSL:**
+   ```nginx
+   server {
+       listen 443 ssl;
+       server_name _;
+       ssl_certificate /etc/ssl/certs/selfsigned.crt;
+       ssl_certificate_key /etc/ssl/private/selfsigned.key;
+       location / {
+           proxy_pass http://vms_app:5002;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+3. **Restart the Nginx container:**
+   ```bash
+   docker-compose restart nginx
+   ```
+
+Now, you can access the application via `https://localhost`.
+
+
 - Hardcoded admin credentials exist in `app.py`. Change them before deploying.
 - SQLite is used for simplicity but lacks robust security features.
 - HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
