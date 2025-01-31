@@ -82,7 +82,7 @@ If you want to use HTTPS with Nginx in a local environment, you can generate a s
 Now, you can access the application via `https://localhost`.
 
 
-- Hardcoded admin credentials exist in `app.py`. Change them before deploying.
+- Hardcoded admin credentials exist in `app.py` on line 64. Change them before deploying.
 - SQLite is used for simplicity but lacks robust security features.
 - HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
 
