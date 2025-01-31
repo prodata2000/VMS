@@ -2,9 +2,10 @@ from flask import Flask, request, render_template, redirect, url_for, send_file,
 import sqlite3
 from datetime import datetime
 import csv
+import os
 
 app = Flask(__name__)
-app.secret_key = "super_secure_secret_key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "default_fallback_key")
 
 DATABASE = 'visitors.db'
 
@@ -33,8 +34,8 @@ def sign_in():
         name = request.form.get("name")
         email = request.form.get("email")
         phone = request.form.get("phone")
-        company = request.form.get("company")  # New field for company
-        person_to_meet = request.form.get("person_to_meet")  # New field for person to meet
+        company = request.form.get("company")
+        person_to_meet = request.form.get("person_to_meet")
         reason = request.form.get("reason")
         checkin_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -61,7 +62,7 @@ def admin_login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        if username == "admin" and password == "SUPER_SECRET_PASSWORD":  # Change to a secure password
+        if username == os.getenv("ADMIN_USERNAME") and password == os.getenv("ADMIN_PASSWORD"):
             session["admin_logged_in"] = True
             return redirect(url_for("admin_dashboard"))
         else:
