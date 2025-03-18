@@ -5,9 +5,10 @@ This project is a simple **Visitor Management System** built using Flask and SQL
 
 ## 🚀 Features
 - Visitor sign-in form with name, email, phone, company, and reason for visit.
+- Visitor sign-out functionality.
 - Admin dashboard for managing and exporting visitor logs.
 - CSV export functionality for visitor data.
-- Session-based admin authentication.
+- Session-based admin authentication with password hashing.
 - Simple SQLite database for data storage.
 - Dockerized deployment with Nginx as a reverse proxy.
 
@@ -37,15 +38,21 @@ VMS/
 │── requirements.txt       # Python dependencies
 │── Dockerfile             # Docker configuration
 │── docker-compose.yml     # Docker Compose setup
-│── nginx.conf             # Nginx reverse proxy configuration
+│── nginx/                 # Nginx configuration
+│   │── nginx.conf         # Nginx reverse proxy configuration
+│   │── certs/             # SSL certificates
 │── templates/             # HTML templates
 │   │── form.html          # Visitor sign-in form
 │   │── thank_you.html     # Thank-you page
 │   │── admin_login.html   # Admin login page
 │   │── admin_dashboard.html # Admin dashboard
+│   │── sign_out.html      # Visitor sign-out form
 ```
 
 ## 🔐 Security Considerations
+- Hardcoded admin credentials exist in `app.py` on line 64. Change them before deploying.
+- SQLite is used for simplicity but lacks robust security features.
+- HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
 
 ## 🌐 Enabling HTTPS with a Self-Signed Certificate
 If you want to use HTTPS with Nginx in a local environment, you can generate a self-signed SSL certificate:
@@ -80,11 +87,6 @@ If you want to use HTTPS with Nginx in a local environment, you can generate a s
    ```
 
 Now, you can access the application via `https://localhost`.
-
-
-- Hardcoded admin credentials exist in `app.py` on line 64. Change them before deploying.
-- SQLite is used for simplicity but lacks robust security features.
-- HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
 
 ## 🤝 Contributing
 1. Fork the repository.
