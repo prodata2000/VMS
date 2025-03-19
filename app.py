@@ -5,6 +5,7 @@ import csv
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 
@@ -13,8 +14,11 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 DATABASE = 'visitors.db'
 
+logging.basicConfig(level=logging.INFO)
+
 # Database initialization
 def init_db():
+    logging.info("Initializing database...")
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('''
@@ -33,6 +37,7 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
+    logging.info("Database initialized.")
 
 def get_db_connection():
     conn = sqlite3.connect(DATABASE)
