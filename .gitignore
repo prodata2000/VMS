@@ -1,2 +1,4 @@
 visitors.db
 __pycache__/app.cpython-39.pyc
+nginx/certs/selfsigned.crt
+nginx/certs/selfsigned.key

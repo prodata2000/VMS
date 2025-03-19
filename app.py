@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, send_file,
 import sqlite3
 from datetime import datetime
 import csv
-from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
+from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
 import logging

@@ -40,7 +40,12 @@ This project is a simple **Visitor Management System** built using Flask and SQL
 ```
 VMS/
 │── app.py                 # Main Flask application
-│── requirements.txt       # Python dependencies
+│── requirements.txt       # Python dependenciefrom flask import Flask, request, render_template, redirect, url_for, send_file, session, flash
+import sqlite3
+from datetime import datetime
+import csv
+from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_s
 │── Dockerfile             # Docker configuration
 │── docker-compose.yml     # Docker Compose setup
 │── nginx/                 # Nginx configuration
