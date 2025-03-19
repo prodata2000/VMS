@@ -4,7 +4,7 @@
 This project is a simple **Visitor Management System** built using Flask and SQLite. It allows visitors to sign in and administrators to manage visitor logs. This project was designed to run in a closed network. It does not have robust security as it was never designed to touch the open internet.
 
 ## 🚀 Features
-- Visitor sign-in form with name, email, phone, company, and reason for visit.
+- Visitor sign-in form with name, email, phone, company, reason for visit, and badge number.
 - Visitor sign-out functionality.
 - Admin dashboard for managing and exporting visitor logs.
 - CSV export functionality for visitor data.
@@ -23,12 +23,17 @@ This project is a simple **Visitor Management System** built using Flask and SQL
    git clone https://github.com/prodata2000/VMS.git
    cd VMS
    ```
-2. Build and run with Docker:
+2. Create a `.env` file in the root directory with the following content:
+   ```env
+   SECRET_KEY=super_secure_secret_key
+   ADMIN_PASSWORD=SUPER_SECRET_PASSWORD
+   ```
+3. Build and run with Docker:
    ```bash
    docker-compose up --build -d
    ```
-3. Access the app:
-   - **Visitor Sign-in:** `http://localhost`
+4. Access the app:
+   - **Visitor Sign-In:** `http://localhost`
    - **Admin Login:** `http://localhost/admin`
 
 ## 📂 Project Structure
@@ -50,7 +55,6 @@ VMS/
 ```
 
 ## 🔐 Security Considerations
-- Hardcoded admin credentials exist in `app.py` on line 64. Change them before deploying.
 - SQLite is used for simplicity but lacks robust security features.
 - HTTPS is not enforced; use Nginx with a proper SSL certificate in production.
 
