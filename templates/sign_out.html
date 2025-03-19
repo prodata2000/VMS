@@ -13,34 +13,28 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Action</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
                     <th>Company</th>
-                    <th>Person to Meet</th>
                     <th>Reason for Visit</th>
                     <th>Check-in Time</th>
-                    <th>Action</th>
+                    <th>Badge Number</th>
                 </tr>
             </thead>
             <tbody>
                 {% for visitor in visitors %}
                 <tr>
-                    <td>{{ visitor[0] }}</td>
-                    <td>{{ visitor[1] }}</td>
-                    <td>{{ visitor[2] }}</td>
-                    <td>{{ visitor[3] }}</td>
-                    <td>{{ visitor[4] }}</td>
-                    <td>{{ visitor[5] }}</td>
-                    <td>{{ visitor[6] }}</td>
-                    <td>{{ visitor[7] }}</td>
                     <td>
                         <form method="POST" action="/sign-out">
-                            <input type="hidden" name="visitor_id" value="{{ visitor[0] }}">
+                            <input type="hidden" name="visitor_id" value="{{ visitor.id }}">
                             <button type="submit" class="btn btn-primary">Sign Out</button>
                         </form>
                     </td>
+                    <td>{{ visitor.name }}</td>
+                    <td>{{ visitor.company }}</td>
+                    <td>{{ visitor.reason }}</td>
+                    <td>{{ visitor.checkin_time }}</td>
+                    <td>{{ visitor.badge_number }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

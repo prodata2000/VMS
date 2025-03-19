@@ -13,8 +13,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install gunicorn
 RUN pip install gunicorn
 
-WORKDIR /app
-COPY . /app
+# Make port 5002 available to the world outside this container
+EXPOSE 5002
+
+# Define environment variable
+ENV NAME World
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers

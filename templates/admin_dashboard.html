@@ -11,7 +11,8 @@
         <h2>Admin Dashboard</h2>
         <p>Welcome, Admin!</p>
         <a href="/admin/export" class="btn btn-success mb-3">Export Visitor Data (CSV)</a>
-        <a href="/sign-out" class="btn btn-info mb-3">View Signed-In Users</a>
+        <a href="/admin/signed-in-users" class="btn btn-info mb-3">View Signed-In Users</a>
+        <a href="/sign-out" class="btn btn-warning mb-3">Visitor Sign-Out</a>
         <form method="POST" action="/admin/delete">
             <button type="submit" class="btn btn-danger">Delete All Visitor Data</button>
         </form>
@@ -30,20 +31,22 @@
                     <th>Reason for Visit</th>
                     <th>Check-in Time</th>
                     <th>Check-out Time</th>
+                    <th>Badge Number</th>
                 </tr>
             </thead>
             <tbody>
                 {% for visitor in visitors %}
                 <tr>
-                    <td>{{ visitor[0] }}</td>
-                    <td>{{ visitor[1] }}</td>
-                    <td>{{ visitor[2] }}</td>
-                    <td>{{ visitor[3] }}</td>
-                    <td>{{ visitor[4] }}</td>
-                    <td>{{ visitor[5] }}</td>
-                    <td>{{ visitor[6] }}</td>
-                    <td>{{ visitor[7] }}</td>
-                    <td>{{ visitor[8] }}</td>
+                    <td>{{ visitor.id }}</td>
+                    <td>{{ visitor.name }}</td>
+                    <td>{{ visitor.email }}</td>
+                    <td>{{ visitor.phone }}</td>
+                    <td>{{ visitor.company }}</td>
+                    <td>{{ visitor.person_to_meet }}</td>
+                    <td>{{ visitor.reason }}</td>
+                    <td>{{ visitor.checkin_time }}</td>
+                    <td>{{ visitor.checkout_time }}</td>
+                    <td>{{ visitor.badge_number }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

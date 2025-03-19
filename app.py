@@ -3,9 +3,13 @@ import sqlite3
 from datetime import datetime
 import csv
 from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "super_secure_secret_key"
+app.secret_key = os.getenv("SECRET_KEY")
 
 DATABASE = 'visitors.db'
 
@@ -23,11 +27,17 @@ def init_db():
             person_to_meet TEXT,
             reason TEXT,
             checkin_time TEXT,
-            checkout_time TEXT
+            checkout_time TEXT,
+            badge_number TEXT
         )
     ''')
     conn.commit()
     conn.close()
+
+def get_db_connection():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 @app.route("/", methods=["GET", "POST"])
 def sign_in():
@@ -35,16 +45,17 @@ def sign_in():
         name = request.form.get("name")
         email = request.form.get("email")
         phone = request.form.get("phone")
-        company = request.form.get("company")  # New field for company
-        person_to_meet = request.form.get("person_to_meet")  # New field for person to meet
+        company = request.form.get("company")
+        person_to_meet = request.form.get("person_to_meet")
         reason = request.form.get("reason")
+        badge_number = request.form.get("badge_number")
         checkin_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        conn = sqlite3.connect(DATABASE)
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO visitors (name, email, phone, company, person_to_meet, reason, checkin_time) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (name, email, phone, company, person_to_meet, reason, checkin_time)
+            "INSERT INTO visitors (name, email, phone, company, person_to_meet, reason, checkin_time, badge_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (name, email, phone, company, person_to_meet, reason, checkin_time, badge_number)
         )
         conn.commit()
         conn.close()
@@ -60,7 +71,7 @@ def sign_out():
         visitor_id = request.form.get("visitor_id")
         checkout_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        conn = sqlite3.connect(DATABASE)
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
             "UPDATE visitors SET checkout_time = ? WHERE id = ?",
@@ -72,7 +83,7 @@ def sign_out():
         flash("Sign-out successful! Thank you for visiting.")
         return redirect(url_for('sign_out'))
 
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM visitors WHERE checkout_time IS NULL")
     signed_in_visitors = cursor.fetchall()
@@ -83,7 +94,7 @@ def sign_out():
 def thank_you():
     return render_template("thank_you.html")
 
-admin_password_hash = generate_password_hash("SUPER_SECRET_PASSWORD")
+admin_password_hash = generate_password_hash(os.getenv("ADMIN_PASSWORD"))
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin_login():
@@ -102,7 +113,7 @@ def admin_dashboard():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM visitors")
     visitors = cursor.fetchall()
@@ -114,7 +125,7 @@ def export_data():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM visitors")
     rows = cursor.fetchall()
@@ -123,7 +134,7 @@ def export_data():
     csv_file = "visitor_data.csv"
     with open(csv_file, "w", newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(["ID", "Name", "Email", "Phone", "Company", "Person to Meet", "Reason for Visit", "Check-in Time", "Check-out Time"])
+        writer.writerow(["ID", "Name", "Email", "Phone", "Company", "Person to Meet", "Reason for Visit", "Check-in Time", "Check-out Time", "Badge Number"])
         writer.writerows(rows)
 
     return send_file(csv_file, as_attachment=True)
@@ -133,7 +144,7 @@ def delete_all():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM visitors")
     conn.commit()
@@ -148,7 +159,7 @@ def logout():
 
 @app.route("/api/previous-visitors", methods=["GET"])
 def previous_visitors():
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT email FROM visitors")
     visitors = cursor.fetchall()
@@ -158,9 +169,9 @@ def previous_visitors():
 @app.route("/api/visitor-details", methods=["GET"])
 def visitor_details():
     email = request.args.get("email")
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT name, email, phone, company, person_to_meet, reason FROM visitors WHERE email = ?", (email,))
+    cursor.execute("SELECT name, email, phone, company, person_to_meet, reason, badge_number FROM visitors WHERE email = ?", (email,))
     visitor = cursor.fetchone()
     conn.close()
     if visitor:
@@ -170,7 +181,8 @@ def visitor_details():
             "phone": visitor[2],
             "company": visitor[3],
             "person_to_meet": visitor[4],
-            "reason": visitor[5]
+            "reason": visitor[5],
+            "badge_number": visitor[6]
         }
     return {}
 
